@@ -12,3 +12,12 @@ export function getSession() {
 export function clearSession() {
   localStorage.removeItem(SESSION_KEY);
 }
+
+export function getToken() {
+  const session = getSession();
+  return session ? session.token : null;
+}
+
+export function isLoggedIn() {
+  return getToken() !== null;
+}

@@ -40,7 +40,7 @@ export default function Login() {
 
     if (ok) {
       setStatus({ type: 'success', message: data?.message || 'Login successful.' });
-      saveSession({ id: data?.id, username: data?.username });
+      saveSession({ id: data?.id, username: data?.username, token: data?.token });
       setForm(initialForm);
       setTimeout(() => navigate('/dashboard'), 600);
     } else {

@@ -13,16 +13,18 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-
+import edu.cit.lobitana.activity01.security.JwtUtil;
 @RestController
 @RequestMapping("/api")
 public class UserController {
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+    private final JwtUtil jwtUtil;
+    public UserController(UserRepository userRepository, JwtUtil jwtUtil) {
 
-    public UserController(UserRepository userRepository) {
         this.userRepository = userRepository;
+        this.jwtUtil = jwtUtil;
     }
 
     // POST /api/register
@@ -53,9 +55,11 @@ public class UserController {
         Map<String, Object> response = new HashMap<>();
 
         if (found.isPresent() && encoder.matches(credentials.getPassword(), found.get().getPassword())) {
+            String token = jwtUtil.generateToken(found.get().getUsername());
             response.put("message", "Login successful");
             response.put("id", found.get().getId());
             response.put("username", found.get().getUsername());
+            response.put("token", token);
             return ResponseEntity.ok(response);
         }
 
